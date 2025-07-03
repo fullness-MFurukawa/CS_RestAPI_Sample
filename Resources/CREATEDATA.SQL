@@ -40,4 +40,3 @@ INSERT INTO employee (emp_name, dept_id) VALUES
 ('中村愛', 3),
 ('小林大輔', 2),
 ('加藤優子', 1);
-このまま .sql ファイルとして
