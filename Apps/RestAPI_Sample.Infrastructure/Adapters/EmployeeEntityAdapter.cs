@@ -1,5 +1,6 @@
 using RestAPI_Sample.Application.Domains.Adapters;
 using RestAPI_Sample.Application.Domains.Models;
+using RestAPI_Sample.Application.Exceptions;
 using RestAPI_Sample.Infrastructure.Entitties;
 namespace RestAPI_Sample.Infrastructure.Adapters;
 /// <summary>
@@ -17,6 +18,10 @@ IConverter<Employee, EmployeeEntity>, IRestorer<Employee, EmployeeEntity>
     /// <returns>EFCore:EmployeeEntity</returns>
     public Task<EmployeeEntity> ConvertAsync(Employee domain)
     {
+        if (domain == null)
+        {
+            throw new InternalException("引数domainがnullです。");
+        }
         var entity = new EmployeeEntity();
         entity.Uuid = domain.Id;
         entity.Name = domain.Name;
@@ -31,6 +36,10 @@ IConverter<Employee, EmployeeEntity>, IRestorer<Employee, EmployeeEntity>
     /// <returns>ドメインオブジェクト:Employee</returns>
     public Task<Employee> RestoreAsync(EmployeeEntity target)
     {
+        if (target == null)
+        {
+            throw new InternalException("引数targetがnullです。");
+        }
         var domain = new Employee(target.Uuid, target.Name);
         if (target.Department != null)
         {

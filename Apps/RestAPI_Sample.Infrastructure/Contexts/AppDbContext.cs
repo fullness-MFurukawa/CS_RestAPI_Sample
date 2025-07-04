@@ -25,19 +25,20 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // ユニーク制約
+
         modelBuilder.Entity<DepartmentEntity>()
-            .HasIndex(d => d.Uuid)
-            .IsUnique();
+           .HasIndex(d => d.Uuid)
+           .IsUnique();
+
         modelBuilder.Entity<EmployeeEntity>()
             .HasIndex(e => e.Uuid)
             .IsUnique();
 
-        // リレーション設定（employee → department）
         modelBuilder.Entity<EmployeeEntity>()
             .HasOne(e => e.Department)
             .WithMany(d => d.Employees)
-            .HasForeignKey(e => e.DepartmentUuid) 
+            .HasForeignKey(e => e.DepartmentUuid)
+            .HasPrincipalKey(d => d.Uuid)
             .HasConstraintName("fk_employee_department")
             .OnDelete(DeleteBehavior.SetNull);
     }

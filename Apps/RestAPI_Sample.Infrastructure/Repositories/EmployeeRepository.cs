@@ -114,6 +114,7 @@ public class EmployeeRepository : IEmployeeRepository
         {
             // 指定されたキーワードで従業員を取得する
             var results = await _context.Employees
+                .Include(e => e.Department)
                 .Where(e => e.Name.Contains(keyword))
                 .AsNoTracking().ToListAsync();
             // EF CoreのEntityからドメインオブジェクトを復元する
