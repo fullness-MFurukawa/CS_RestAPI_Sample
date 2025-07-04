@@ -116,11 +116,6 @@ public class EmployeeRepository : IEmployeeRepository
             var results = await _context.Employees
                 .Where(e => e.Name.Contains(keyword))
                 .AsNoTracking().ToListAsync();
-            // 該当する従業員が存在しない場合nullを返す
-            if (results.Count == 0)
-            {
-                return null;
-            }
             // EF CoreのEntityからドメインオブジェクトを復元する
             var employees = new List<Employee>();
             foreach (var result in results)
