@@ -11,5 +11,5 @@ public interface IConverter<TDomain, TTarget>
     /// </summary>
     /// <param name="domain">ドメインオブジェクト</param>
     /// <returns>変換結果</returns>
-    TTarget Convert(TDomain domain);
+    Task<TTarget> ConvertAsync(TDomain domain);
 }

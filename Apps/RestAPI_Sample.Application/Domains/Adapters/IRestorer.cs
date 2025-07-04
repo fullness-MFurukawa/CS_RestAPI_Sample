@@ -11,5 +11,5 @@ public interface IRestorer<TDomain, TTarget>
     /// </summary>
     /// <typeparam name="TTarget">対象クラスの型</typeparam>
     /// <returns>復元したドメインオブジェクト</returns>
-    TDomain Restore(TTarget target);
+    Task<TDomain> RestoreAsync(TTarget target);
 }
