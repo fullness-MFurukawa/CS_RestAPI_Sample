@@ -6,6 +6,7 @@ using RestAPI_Sample.Infrastructure.Adapters;
 using RestAPI_Sample.Infrastructure.Contexts;
 
 namespace RestAPI_Sample.Infrastructure.Repositories;
+
 /// <summary>
 /// ドメインオブジェクト:Employee(従業員)のCRUD操作インターフェイスの実装
 /// </summary>
@@ -46,6 +47,7 @@ public class EmployeeRepository : IEmployeeRepository
                 "従業員の追加に失敗しました。", ex);
         }
     }
+
     /// <summary>
     /// 従業員を削除する
     /// </summary>
@@ -63,7 +65,7 @@ public class EmployeeRepository : IEmployeeRepository
                 return false;
             }
             // 取得したEntityを削除する
-            _context.Employees.Remove(entity); 
+            _context.Employees.Remove(entity);
             // 削除をデータベースに反映させる
             await _context.SaveChangesAsync();
             return true;
@@ -75,6 +77,7 @@ public class EmployeeRepository : IEmployeeRepository
                 "従業員の削除に失敗しました。", ex);
         }
     }
+
     /// <summary>
     /// 指定された従業員Idで従業員を取得する
     /// </summary>
@@ -86,7 +89,9 @@ public class EmployeeRepository : IEmployeeRepository
         {
             // 従業員Idで従業員を取得する
             var entity = await _context.Employees
-                .Where(e => e.Uuid == id).AsNoTracking()
+                .Where(e => e.Uuid == id)
+                .Include(e => e.Department)
+                .AsNoTracking()
                 .FirstOrDefaultAsync();
             // 存在しない場合はnullを返す
             if (entity == null)
@@ -103,6 +108,7 @@ public class EmployeeRepository : IEmployeeRepository
                 $"従業員の取得に失敗しました。 id={id}", ex);
         }
     }
+
     /// <summary>
     /// 従業員をキーワード検索する
     /// </summary>
@@ -133,6 +139,7 @@ public class EmployeeRepository : IEmployeeRepository
                 $"従業員の取得に失敗しました。 keyword={keyword}", ex);
         }
     }
+    
     /// <summary>
     /// 従業員を変更する
     /// </summary>

@@ -6,15 +6,14 @@ using RestAPI_Sample.Infrastructure.Repositories;
 
 namespace RestAPI_Sample.Infrastructure.Tests.Repositories;
 /// <summary>
-/// ドメインオブジェクト:Department(部署)のCRUD操作インターフェイスの実装の単体テストドライバ
+/// ドメインオブジェクト:Employee(従業員)のCRUD操作インターフェイスの実装の単体テストドライバ
 /// </summary>
 [TestClass]
-public class DepartmentRepositoryTests
+public class EmployeeRepositoryTests
 {
     private static AppDbContext _sharedContext = null!;
     private IDbContextTransaction _transaction = null!;
-    private DepartmentRepository _repository = null!;
-
+    private EmployeeRepository _repository = null!;
     /// <summary>
     /// テストクラスの初期化処理
     /// </summary>
@@ -51,7 +50,6 @@ public class DepartmentRepositoryTests
             _sharedContext.Dispose();
         }
     }
-
     /// <summary>
     /// テストメソッド実行の前処理
     /// </summary>
@@ -60,8 +58,8 @@ public class DepartmentRepositoryTests
     {
         // トランザクションの開始
         _transaction = _sharedContext.Database.BeginTransaction();
-        // ターゲット:DepartmentRepositryの生成 
-        _repository = new DepartmentRepository(_sharedContext, new DepartmentEntityAdapter());
+        // ターゲット:EmployeeRepositryの生成 
+        _repository = new EmployeeRepository(_sharedContext, new EmployeeEntityAdapter());
     }
     /// <summary>
     /// テストメソッド実行後の後処理
@@ -75,35 +73,28 @@ public class DepartmentRepositoryTests
         _transaction.Dispose();
     }
 
-    [TestMethod("すべての部署を取得する")]
-    public async Task SelectAllAsync_ShouldSucceed()
-    {
-        // すべての部署を取得する
-        var results = await _repository.SelectAllAync();
-        foreach (var result in results)
-        {
-            Console.WriteLine(result.ToString());
-        }
-        Assert.AreEqual(3, results.Count());
-    }
-
-    [TestMethod("部署IDにより1件の部署を取得する")]
+    [TestMethod("指定された従業員Idに一致する従業員を取得する")]
     public async Task SelectByIdAsync_ShouldSucceed()
     {
-        // 営業部のUUID
-        var expectedId = "3fa85f64-5717-4562-b3fc-2c963f66afa6";
-        var department = await _repository.SelectByIdAsync(expectedId);
-        Assert.IsNotNull(department);
-        Assert.AreEqual(expectedId, department?.Id);
-        Assert.AreEqual("営業部", department?.Name);
+        // 伊藤誠
+        var existingId = "8acb02f4-b3a2-4ccf-998d-69f22a8b882f";
+        var result = await _repository.SelectByIdAsync(existingId);
+        Assert.IsNotNull(result);
+        Assert.AreEqual(existingId, result!.Id);
+        Assert.AreEqual("伊藤誠", result!.Name);
+        Assert.AreEqual("4d3eabd8-9f8c-4a2b-9156-081a4e34b93a", result!.Department!.Id);
+        Assert.AreEqual("総務部", result!.Department!.Name);
+        Console.WriteLine(result);
     }
     
-    [TestMethod("存在しない部署IDの場合はnullを返す")]
-    public async Task SelectByIdAsync_NotFoundId_ShouldReturnNull()
+    [TestMethod("存在しない従業員Idに対してnullを返す")]
+    public async Task SelectByIdAsync_NotFound_ShouldReturnNull()
     {
         // 存在しないUUID
         var notFoundId = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"; 
         var result = await _repository.SelectByIdAsync(notFoundId);
+        // nullを返すことを検証
         Assert.IsNull(result);
+        Console.WriteLine("存在しないIDに対してnullが返されました。");
     }
 }

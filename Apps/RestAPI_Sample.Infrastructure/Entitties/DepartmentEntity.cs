@@ -13,12 +13,15 @@ public class DepartmentEntity
     public int Id { get; set; }
 
     [Required]
-    [Column("dept_uuid", TypeName = "char(36)")]
-    public string Uuid { get; set; } = default!;
+    [StringLength(36)]
+    [Column("dept_uuid")]
+    public string Uuid { get; set; } = string.Empty;
 
     [Required]
-    [Column("dept_name", TypeName = "varchar(20)")]
-    public string Name { get; set; } = default!;
+    [StringLength(20)]
+    [Column("dept_name")]
+    public string Name { get; set; }  = string.Empty;
 
+    // 1対多の「多」側へのナビゲーション
     public ICollection<EmployeeEntity> Employees { get; set; } = new List<EmployeeEntity>();
 }

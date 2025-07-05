@@ -25,21 +25,23 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-
+        /*
+        // Department: dept_uuid に一意制約を追加
         modelBuilder.Entity<DepartmentEntity>()
-           .HasIndex(d => d.Uuid)
-           .IsUnique();
-
+            .HasIndex(d => d.Uuid)
+            .IsUnique();
+        // Employee: emp_uuid に一意制約を追加
         modelBuilder.Entity<EmployeeEntity>()
             .HasIndex(e => e.Uuid)
             .IsUnique();
-
+        // Employee と Department のリレーション
         modelBuilder.Entity<EmployeeEntity>()
             .HasOne(e => e.Department)
             .WithMany(d => d.Employees)
-            .HasForeignKey(e => e.DepartmentUuid)
-            .HasPrincipalKey(d => d.Uuid)
-            .HasConstraintName("fk_employee_department")
+            .HasForeignKey(e => e.DepartmentId)  // 外部キーは dept_id (int)
+            .HasPrincipalKey(d => d.Id)          // 主キーは dept_id (int)
+            .HasConstraintName("employee_ibfk_1")
             .OnDelete(DeleteBehavior.SetNull);
+        */
     }
 }

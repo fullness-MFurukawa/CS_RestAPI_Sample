@@ -25,7 +25,7 @@ IConverter<Employee, EmployeeEntity>, IRestorer<Employee, EmployeeEntity>
         var entity = new EmployeeEntity();
         entity.Uuid = domain.Id;
         entity.Name = domain.Name;
-        entity.DepartmentUuid = domain.Department!.Id;
+       // entity.DepartmentUuid = domain.Department!.Id;
         return Task.FromResult(entity);
     }
     

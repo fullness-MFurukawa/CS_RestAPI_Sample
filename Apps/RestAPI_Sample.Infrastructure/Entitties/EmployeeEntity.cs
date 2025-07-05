@@ -13,16 +13,18 @@ public class EmployeeEntity
     public int Id { get; set; }
 
     [Required]
-    [Column("emp_uuid", TypeName = "char(36)")]
-    public string Uuid { get; set; } = default!;
+    [StringLength(36)]
+    [Column("emp_uuid")]
+    public string Uuid { get; set; } = string.Empty;
 
     [Required]
-    [Column("emp_name", TypeName = "varchar(20)")]
-    public string Name { get; set; } = default!;
+    [StringLength(20)]
+    [Column("emp_name")]
+    public string Name { get; set; } = string.Empty;
 
-    [Column("dept_uuid", TypeName = "char(36)")]
-    public string? DepartmentUuid { get; set; }
+    [Column("dept_id")]
+    public int? DepartmentId { get; set; } // NULL許容に変更
 
-    [ForeignKey("DepartmentUuid")]
+    [ForeignKey("DepartmentId")]
     public DepartmentEntity? Department { get; set; }
 }

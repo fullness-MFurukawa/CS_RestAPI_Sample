@@ -44,12 +44,12 @@ public class DepartmentRepository : IDepartmentRepositiry
         }
         catch (Exception ex)
         {
-             // 例外が発生した場合はInternalExceptionをスローする
+            // 例外が発生した場合はInternalExceptionをスローする
             throw new InternalException(
                 $"すべての部署取得に失敗しました。", ex);
         }
     }
-
+    
     /// <summary>
     /// 指定された部署Idの部署を取得する
     /// </summary>
