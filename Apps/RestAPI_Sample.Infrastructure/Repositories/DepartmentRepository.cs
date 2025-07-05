@@ -9,7 +9,7 @@ namespace RestAPI_Sample.Infrastructure.Repositories;
 /// <summary>
 /// ドメインオブジェクト:Department(部署)のCRUD操作インターフェイスの実装
 /// </summary>
-public class DepartmentRepository : IDepartmentRepositiry
+public class DepartmentRepository : IDepartmentRepository
 {
     private readonly AppDbContext _context;
     private readonly DepartmentEntityAdapter _adapter;

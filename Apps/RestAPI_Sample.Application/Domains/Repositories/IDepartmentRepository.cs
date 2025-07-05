@@ -3,7 +3,7 @@ namespace RestAPI_Sample.Application.Domains.Repositories;
 /// <summary>
 /// ドメインオブジェクト:Department(部署)のCRUD操作インターフェイス
 /// </summary>
-public interface IDepartmentRepositiry
+public interface IDepartmentRepository
 {
     /// <summary>
     /// すべての部署を取得する

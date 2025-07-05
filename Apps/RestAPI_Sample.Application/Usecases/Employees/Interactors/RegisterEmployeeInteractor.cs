@@ -8,7 +8,7 @@ namespace RestAPI_Sample.Application.Usecases.Employees.Interactors;
 /// </summary>
 public class RegisterEmployeeInteractor : IRegisterEmployeeUseCase
 {
-    private readonly IDepartmentRepositiry _departmentRepository;
+    private readonly IDepartmentRepository _departmentRepository;
     private readonly IEmployeeRepository _employeeRepository;
     private readonly IUnitOfWork _unitOfWork;
     /// <summary>
@@ -18,7 +18,7 @@ public class RegisterEmployeeInteractor : IRegisterEmployeeUseCase
     /// <param name="employeeRepository">ドメインオブジェクト:Employee(従業員)のCRUD操作インターフェイス</param>
     /// <param name="unitOfWork">Unit of Workパターンを利用したトランザクション制御インターフェイス</param>
     public RegisterEmployeeInteractor(
-        IDepartmentRepositiry departmentRepository,
+        IDepartmentRepository departmentRepository,
         IEmployeeRepository employeeRepository,
         IUnitOfWork unitOfWork)
     {

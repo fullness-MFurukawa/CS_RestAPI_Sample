@@ -18,7 +18,7 @@ public interface IRegisterEmployeeUseCase
     /// <param name="id">部署Id</param>
     /// <returns>該当部署</returns>
     /// <exception cref="NotFoundException">該当データが存在しない場合にスローされる</exception>
-    Task<Department> GetDepartmentByIdAsync(string id);
+    Task<Department> GetDepartmentByIdAsync(string   id);
     /// <summary>
     /// 従業員を登録する
     /// </summary>
