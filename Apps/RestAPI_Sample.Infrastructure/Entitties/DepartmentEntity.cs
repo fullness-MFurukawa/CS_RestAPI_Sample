@@ -20,8 +20,14 @@ public class DepartmentEntity
     [Required]
     [StringLength(20)]
     [Column("dept_name")]
-    public string Name { get; set; }  = string.Empty;
+    public string Name { get; set; } = string.Empty;
 
     // 1対多の「多」側へのナビゲーション
     public ICollection<EmployeeEntity> Employees { get; set; } = new List<EmployeeEntity>();
+
+    public override string ToString()
+    {
+        return $"Id={Id},Uuid={Uuid},Name={Name}";
+    }
+
 }

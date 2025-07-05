@@ -35,6 +35,13 @@ public class EmployeeRepository : IEmployeeRepository
         {
             // ドメインオブジェクトをEF CoreのEntityに変換する
             var entity = await _adapter.ConvertAsync(employee);
+            // 外部キー値をentityに設定する
+            var result = await _context.Departments
+                .Where(d => d.Uuid == entity.Department!.Uuid)
+                .AsNoTracking()
+                .SingleOrDefaultAsync();
+            entity.DepartmentId = result!.Id;
+            entity.Department = null;
             // 従業員を追加する
             await _context.Employees.AddAsync(entity);
             // データベースに反映させる
@@ -139,7 +146,7 @@ public class EmployeeRepository : IEmployeeRepository
                 $"従業員の取得に失敗しました。 keyword={keyword}", ex);
         }
     }
-    
+
     /// <summary>
     /// 従業員を変更する
     /// </summary>

@@ -27,4 +27,9 @@ public class EmployeeEntity
 
     [ForeignKey("DepartmentId")]
     public DepartmentEntity? Department { get; set; }
+
+    public override string ToString()
+    {
+        return $"Id={Id},Uuid={Uuid},Name={Name},DepartmentId={DepartmentId},Department={Department}";
+    }
 }
