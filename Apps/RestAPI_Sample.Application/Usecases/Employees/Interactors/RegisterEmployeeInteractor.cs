@@ -68,7 +68,7 @@ public class RegisterEmployeeInteractor : IRegisterEmployeeUseCase
         if (result == null)
         {
             throw new NotFoundException(
-            $"部署Id:{employee.Department.Id}に一致する部署は存在したいため、従業員の登録はできません。");
+            $"部署Id:{employee.Department.Id}に一致する部署は存在しないため、従業員の登録はできません。");
         }
         // トランザクションを開始する
         await _unitOfWork.BeginAsync();
