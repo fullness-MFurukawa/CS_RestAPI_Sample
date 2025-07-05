@@ -53,7 +53,7 @@ public class RegisterEmployeeInteractor : IRegisterEmployeeUseCase
             throw new NotFoundException(
                 $"部署Id:{id}に一致する部署は存在しません。");
         }
-        return result!;
+        return result;
     }
 
     /// <summary>
