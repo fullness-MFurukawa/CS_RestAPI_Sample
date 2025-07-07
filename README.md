@@ -56,3 +56,15 @@ Jul 05 12:57:51 DESKTOP-F7R4MFG systemd[1]: Starting mysql.service - MySQL Commu
 Jul 05 12:57:52 DESKTOP-F7R4MFG systemd[1]: Started mysql.service - MySQL Communi>
 lines 1-14/14 (END)
 ```
+
+- Moqのインストール
+```bash
+cd Tests/RestAPI_Sample.Application.Tests
+dotnet add package Moq
+```
+
+- Moqのインストール
+```bash
+cd Tests/RestAPI_Sample.Infrastructure.Tests
+dotnet add package Moq
+```
