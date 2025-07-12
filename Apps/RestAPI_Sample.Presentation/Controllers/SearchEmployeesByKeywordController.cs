@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using RestAPI_Sample.Application.Domains.Models;
 using RestAPI_Sample.Application.Usecases.Employees.Interfaces;
 using RestAPI_Sample.Application.Exceptions;
 namespace RestAPI_Sample.Presentation.Controllers;
@@ -29,8 +28,12 @@ public class SearchEmployeesByKeywordController : ControllerBase
     /// <returns></returns>
     [HttpGet]
     [SwaggerOperation(Summary = "従業員名に指定キーワードを含むデータを検索します。")]
-    public async Task<IActionResult> Get([FromQuery] string keyword)
+    public async Task<IActionResult> Get([FromQuery] string? keyword)
     {
+        if (string.IsNullOrWhiteSpace(keyword))
+        {
+            return BadRequest(new { message = "検索キーワードを入力してください。" });
+        }
         try
         {
             // ユースケースを実行
