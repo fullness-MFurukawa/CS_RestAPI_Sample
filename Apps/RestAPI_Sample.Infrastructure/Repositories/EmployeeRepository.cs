@@ -157,14 +157,25 @@ public class EmployeeRepository : IEmployeeRepository
         {
             // 従業員Idで従業員を取得する
             var entity = await _context.Employees
-                .Where(e => e.Uuid == employee.Id).FirstOrDefaultAsync();
+                .Where(e => e.Uuid == employee.Id)
+                .FirstOrDefaultAsync();
             // 存在しない場合はfalseを返す
             if (entity == null)
             {
                 return false;
             }
+            var deptEntity = await _context.Departments
+                .Where(d => d.Uuid == employee.Department!.Id)
+                .SingleOrDefaultAsync();
+            // 存在しない場合はfalseを返す
+            if (deptEntity == null)
+            {
+                return false;
+            }
             // 氏名を変更する
             entity.Name = employee.Name;
+            // 部署Id(外部キー)を変更する
+            entity.DepartmentId = deptEntity.Id;
             // 従業員データを更新する
             _context.Employees.Update(entity);
             // 変更をデータベースに反映させる

@@ -20,5 +20,6 @@ public interface IUpdateEmployeeUsecase
     /// </summary>
     /// <param name="employee">更新対象従業員</param>
     /// <exception cref="NotFoundException">従業員が存在しない場合にスローされる</exception>
-    Task UpdateEmployee(Employee employee);
+    /// <exception cref="NotFoundException">部署が存在しない場合にスローされる</exception>
+    Task UpdateEmployeeAsync(Employee employee);
 }
