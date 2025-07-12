@@ -73,3 +73,8 @@ dotnet add package Moq
 ```bash
 dotnet add package Microsoft.Extensions.DependencyInjection
 ```
+
+- Swashbuckle のアノテーション属性のインストール
+```bash
+dotnet add package Swashbuckle.AspNetCore.Annotations
+```

@@ -8,11 +8,12 @@
 
   <ItemGroup>
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="9.0.3" />
     <ProjectReference Include="..\RestAPI_Sample.Infrastructure\RestAPI_Sample.Infrastructure.csproj" />
     <ProjectReference Include="..\RestAPI_Sample.Application\RestAPI_Sample.Application.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.17" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.7" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
 </Project>
