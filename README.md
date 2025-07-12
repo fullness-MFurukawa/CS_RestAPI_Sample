@@ -77,4 +77,7 @@ dotnet add package Microsoft.Extensions.DependencyInjection
 - Swashbuckle のアノテーション属性のインストール
 ```bash
 dotnet add package Swashbuckle.AspNetCore.Annotations
+または
+dotnet add package Swashbuckle.AspNetCore --version 6.5.0
+
 ```

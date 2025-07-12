@@ -4,7 +4,7 @@ using RestAPI_Sample.Application.Usecases.Employees.Interfaces;
 using RestAPI_Sample.Application.Exceptions;
 namespace RestAPI_Sample.Presentation.Controllers;
 /// <summary>
-/// 従業員キーワード検索API Controller
+/// 従業員キーワード検索 API Controller
 /// </summary>
 [ApiController]
 [Route("api/employees/search")]
