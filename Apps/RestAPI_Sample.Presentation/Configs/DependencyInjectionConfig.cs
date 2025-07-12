@@ -1,6 +1,4 @@
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore; 
-using Microsoft.Extensions.Configuration;
 using RestAPI_Sample.Infrastructure.Contexts;
 using RestAPI_Sample.Infrastructure.Adapters;
 using RestAPI_Sample.Infrastructure.Repositories;
@@ -65,6 +63,6 @@ public static class DependencyInjectionConfig
     {
         // ユースケース実現インターフェイスとその実装を登録
         services.AddScoped<ISearchEmployeesByKeywordUseCase,SearchEmployeesByKeywordInteractor>();
-
+        services.AddScoped<IRegisterEmployeeUseCase,RegisterEmployeeInteractor>();
     }
 }
