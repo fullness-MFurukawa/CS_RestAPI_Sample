@@ -1,5 +1,11 @@
 var builder = WebApplication.CreateBuilder(args);
 
+// アプリケーション構成要素の依存関係定義
+RestAPI_Sample.Presentation.Configs
+    .DependencyInjectionConfig.ConfigureDependencies(
+        builder.Configuration, builder.Services);
+
+
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

@@ -25,7 +25,6 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        /*
         // Department: dept_uuid に一意制約を追加
         modelBuilder.Entity<DepartmentEntity>()
             .HasIndex(d => d.Uuid)
@@ -42,6 +41,5 @@ public class AppDbContext : DbContext
             .HasPrincipalKey(d => d.Id)          // 主キーは dept_id (int)
             .HasConstraintName("employee_ibfk_1")
             .OnDelete(DeleteBehavior.SetNull);
-        */
     }
 }

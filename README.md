@@ -68,3 +68,8 @@ dotnet add package Moq
 cd Tests/RestAPI_Sample.Infrastructure.Tests
 dotnet add package Moq
 ```
+
+- Microsoft.Extensions.DependencyInjectionのインストール
+```bash
+dotnet add package Microsoft.Extensions.DependencyInjection
+```
