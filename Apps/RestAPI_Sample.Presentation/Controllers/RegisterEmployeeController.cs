@@ -14,13 +14,17 @@ namespace RestAPI_Sample.Presentation.Controllers;
 public class RegisterEmployeeController : ControllerBase
 {
     private readonly IRegisterEmployeeUseCase _useCase;
+    private readonly RegisterEmployeeViewModelAdapter _adapter;
     /// <summary>
     /// コンストラクタ
     /// </summary>
     /// <param name="useCase">従業員登録ユースケースを実現するインターフェイス</param>
-    public RegisterEmployeeController(IRegisterEmployeeUseCase useCase)
+    public RegisterEmployeeController(
+        IRegisterEmployeeUseCase useCase,
+        RegisterEmployeeViewModelAdapter adapter)
     {
         _useCase = useCase;
+        _adapter = adapter;
     }
 
     /// <summary>
@@ -44,7 +48,26 @@ public class RegisterEmployeeController : ControllerBase
     [SwaggerOperation(Summary = "従業員を登録します。")]
     public async Task<IActionResult> Register([FromBody] RegisterEmployeeViewModel model)
     {
-        
+        // バリデーションチェックエラー
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        try
+        {
+            // RegisterEmployeeViewModelからEmployee復元する
+            var employee = await _adapter.RestoreAsync(model);
+            // 職部署を取得する
+            var department = await _useCase.GetDepartmentByIdAsync(model.DepartmentId);
+            employee.ChangeDepartment(department);
+            // 従業員を永続化する
+            await _useCase.RegisterEmployeeAsync(employee);
+            return Created("", new { message = $"従業員:{model.Name}を登録しました。" });
+        }
+        catch (NotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
     }
 
     /// <summary>
@@ -52,7 +75,7 @@ public class RegisterEmployeeController : ControllerBase
     /// </summary>
     /// <param name="departmentId"></param>
     /// <returns></returns> 
-    [AcceptVerbs("Get", "Post")]
+    //[AcceptVerbs("Get", "Post")]
     [HttpGet("VerifyDepartmentId")]
     public async Task<IActionResult> VerifyDepartmentId(string departmentId)
     {

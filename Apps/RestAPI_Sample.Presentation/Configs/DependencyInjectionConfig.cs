@@ -7,6 +7,8 @@ using RestAPI_Sample.Application.Domains.Repositories;
 using RestAPI_Sample.Application.Usecases;
 using RestAPI_Sample.Application.Usecases.Employees.Interfaces;
 using RestAPI_Sample.Application.Usecases.Employees.Interactors;
+using RestAPI_Sample.Presentation.ViewModels;
+    using RestAPI_Sample.Application.Domains.Models;
 
 namespace RestAPI_Sample.Presentation.Configs;
 /// <summary>
@@ -26,6 +28,8 @@ public static class DependencyInjectionConfig
         AddInfrastructureServices(config, services);
         // アプリケーション層の依存関係定義
         AddApplicationServices(services);
+        // プレゼンテーション層の依存関係定義
+        AddPresentationServices(services);
     }
 
     /// <summary>
@@ -49,10 +53,10 @@ public static class DependencyInjectionConfig
         services.AddScoped<DepartmentEntityAdapter>();
         services.AddScoped<EmployeeEntityAdapter>();
         // Repositoryインターフェイスの実装を依存性注入に登録
-        services.AddScoped<IDepartmentRepository , DepartmentRepository>();
-        services.AddScoped<IEmployeeRepository , EmployeeRepository>();
+        services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+        services.AddScoped<IEmployeeRepository, EmployeeRepository>();
         // IUnitOfWorkインターフェイスの実装を依存性注入に登録
-        services.AddScoped<IUnitOfWork , UnitOfWork>(); 
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
     }
 
     /// <summary>
@@ -62,7 +66,16 @@ public static class DependencyInjectionConfig
     private static void AddApplicationServices(IServiceCollection services)
     {
         // ユースケース実現インターフェイスとその実装を登録
-        services.AddScoped<ISearchEmployeesByKeywordUseCase,SearchEmployeesByKeywordInteractor>();
-        services.AddScoped<IRegisterEmployeeUseCase,RegisterEmployeeInteractor>();
+        services.AddScoped<ISearchEmployeesByKeywordUseCase, SearchEmployeesByKeywordInteractor>();
+        services.AddScoped<IRegisterEmployeeUseCase, RegisterEmployeeInteractor>();
+    }
+
+    /// <summary>
+    /// プレゼンテーション層の依存関係定義
+    /// </summary>
+    /// <param name="services">依存性注入インターフェイス</param>
+    private static void AddPresentationServices(IServiceCollection services)
+    {
+        services.AddScoped<RegisterEmployeeViewModelAdapter>();
     }
 }

@@ -24,7 +24,6 @@ public class DepartmentEntity
 
     // 1対多の「多」側へのナビゲーション
     public ICollection<EmployeeEntity> Employees { get; set; } = new List<EmployeeEntity>();
-
     public override string ToString()
     {
         return $"Id={Id},Uuid={Uuid},Name={Name}";
