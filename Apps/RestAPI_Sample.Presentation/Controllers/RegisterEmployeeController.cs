@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RestAPI_Sample.Application.Exceptions;
 using RestAPI_Sample.Application.Usecases.Employees.Interfaces;
+using RestAPI_Sample.Presentation.ViewModels;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace RestAPI_Sample.Presentation.Controllers;
@@ -34,23 +35,36 @@ public class RegisterEmployeeController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("department")]
-    [SwaggerOperation(Summary = "指定された部署Idの部署を取得します。")]
-    public async Task<IActionResult> GetDepartment([FromQuery] string? departmentId)
+    /// <summary>
+    /// 従業員登録
+    /// </summary>
+    /// <param name="model">登録する従業員データ</param>
+    /// <returns></returns>
+    [HttpPost]
+    [SwaggerOperation(Summary = "従業員を登録します。")]
+    public async Task<IActionResult> Register([FromBody] RegisterEmployeeViewModel model)
     {
-        if (string.IsNullOrWhiteSpace(departmentId))
-        {
-            return BadRequest(new { message = "部署Idを入力してください。" });
-        }
+        
+    }
+
+    /// <summary>
+    /// RegisterEmployeeViewModelからの部署Id有無チェック要求
+    /// </summary>
+    /// <param name="departmentId"></param>
+    /// <returns></returns> 
+    [AcceptVerbs("Get", "Post")]
+    [HttpGet("VerifyDepartmentId")]
+    public async Task<IActionResult> VerifyDepartmentId(string departmentId)
+    {
         try
         {
             var result = await _useCase.GetDepartmentByIdAsync(departmentId!);
-            return Ok(result);
+            return new JsonResult(true);
         }
         catch (NotFoundException ex)
         {
             // 見つからなかった場合は例外メッセージを返す
-            return NotFound(new { message = ex.Message });
+            return new JsonResult(ex.Message);
         }
     }
 }
