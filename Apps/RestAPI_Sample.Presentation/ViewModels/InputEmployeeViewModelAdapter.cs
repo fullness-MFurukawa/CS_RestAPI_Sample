@@ -4,9 +4,9 @@ using RestAPI_Sample.Application.Domains.Models;
 namespace RestAPI_Sample.Presentation.ViewModels;
 
 /// <summary>
-/// RegisterEmployeeViewModelからドメインモデルEmployeeを復元するAdapter
+/// InputEmployeeViewModelからドメインモデルEmployeeを復元するAdapter
 /// </summary>
-public class RegisterEmployeeViewModelAdapter :
+public class InputEmployeeViewModelAdapter :
 IRestorer<Employee, RegisterEmployeeViewModel>
 {
     /// <summary>

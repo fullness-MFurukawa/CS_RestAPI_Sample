@@ -76,6 +76,6 @@ public static class DependencyInjectionConfig
     /// <param name="services">依存性注入インターフェイス</param>
     private static void AddPresentationServices(IServiceCollection services)
     {
-        services.AddScoped<RegisterEmployeeViewModelAdapter>();
+        services.AddScoped<InputEmployeeViewModelAdapter>();
     }
 }

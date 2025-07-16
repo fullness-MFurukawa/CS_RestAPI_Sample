@@ -14,14 +14,14 @@ namespace RestAPI_Sample.Presentation.Controllers;
 public class RegisterEmployeeController : ControllerBase
 {
     private readonly IRegisterEmployeeUseCase _useCase;
-    private readonly RegisterEmployeeViewModelAdapter _adapter;
+    private readonly InputEmployeeViewModelAdapter _adapter;
     /// <summary>
     /// コンストラクタ
     /// </summary>
     /// <param name="useCase">従業員登録ユースケースを実現するインターフェイス</param>
     public RegisterEmployeeController(
         IRegisterEmployeeUseCase useCase,
-        RegisterEmployeeViewModelAdapter adapter)
+        InputEmployeeViewModelAdapter adapter)
     {
         _useCase = useCase;
         _adapter = adapter;
