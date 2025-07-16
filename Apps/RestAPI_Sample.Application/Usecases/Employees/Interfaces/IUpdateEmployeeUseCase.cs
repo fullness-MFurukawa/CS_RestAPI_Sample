@@ -7,6 +7,13 @@ namespace RestAPI_Sample.Application.Usecases.Employees.Interfaces;
 public interface IUpdateEmployeeUsecase
 {
     /// <summary>
+    /// すべての部署を取得する
+    /// クライアント側の[入力画面]で利用するプルダウンを作成するため
+    /// </summary>
+    /// <returns>Departmentのリスト</returns>
+    Task<List<Department>> GetDepartmentsAsync();
+
+    /// <summary>
     /// 指定された従業員Idの従業員を取得する
     /// クライアント側の[削除画面]で利用するため
     /// </summary>

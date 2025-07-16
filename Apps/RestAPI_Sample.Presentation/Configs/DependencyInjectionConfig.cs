@@ -68,6 +68,7 @@ public static class DependencyInjectionConfig
         // ユースケース実現インターフェイスとその実装を登録
         services.AddScoped<ISearchEmployeesByKeywordUseCase, SearchEmployeesByKeywordInteractor>();
         services.AddScoped<IRegisterEmployeeUseCase, RegisterEmployeeInteractor>();
+        services.AddScoped<IUpdateEmployeeUsecase, UpdateEmployeeInteractor>();
     }
 
     /// <summary>

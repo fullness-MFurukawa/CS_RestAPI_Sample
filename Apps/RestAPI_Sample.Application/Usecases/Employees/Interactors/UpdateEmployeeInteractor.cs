@@ -24,6 +24,17 @@ public class UpdateEmployeeInteractor : IUpdateEmployeeUsecase
         _employeeRepository = employeeRepository;
         _unitOfWork = unitOfWork;
     }
+    
+    /// <summary>
+    /// すべての部署を取得する
+    /// クライアント側の[入力画面]で利用するプルダウンを作成するため
+    /// </summary>
+    /// <returns>Departmentのリスト</returns>
+    public async Task<List<Department>> GetDepartmentsAsync()
+    {
+        var results = await _departmentRepository.SelectAllAync();
+        return results;
+    }
 
     /// <summary>
     /// 指定された従業員Idの従業員を取得する
@@ -40,7 +51,7 @@ public class UpdateEmployeeInteractor : IUpdateEmployeeUsecase
             throw new NotFoundException(
                 $"従業員Id:{id}に一致する従業員は存在しません。");
         }
-        return result; 
+        return result;
     }
 
     /// <summary>

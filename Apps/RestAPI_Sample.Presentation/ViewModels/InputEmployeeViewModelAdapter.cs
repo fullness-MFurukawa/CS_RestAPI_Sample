@@ -7,14 +7,14 @@ namespace RestAPI_Sample.Presentation.ViewModels;
 /// InputEmployeeViewModelからドメインモデルEmployeeを復元するAdapter
 /// </summary>
 public class InputEmployeeViewModelAdapter :
-IRestorer<Employee, RegisterEmployeeViewModel>
+IRestorer<Employee, InputEmployeeViewModel>
 {
     /// <summary>
     /// RegisterEmployeeViewModelからドメインモデルEmployeeを復元する
     /// </summary>
     /// <param name="target">RegisterEmployeeViewModel</param>
     /// <returns>ドメインモデルEmployee</returns>
-    public Task<Employee> RestoreAsync(RegisterEmployeeViewModel target)
+    public Task<Employee> RestoreAsync(InputEmployeeViewModel target)
     {
         var employee = new Employee(target.Name);
         return Task.FromResult(employee);

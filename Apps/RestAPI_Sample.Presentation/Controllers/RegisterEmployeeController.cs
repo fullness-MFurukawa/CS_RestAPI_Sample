@@ -6,24 +6,25 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace RestAPI_Sample.Presentation.Controllers;
 /// <summary>
-/// 従業員キーワード検索 API Controller
+/// 従業員登録 API Controller
 /// </summary>
 [ApiController]
 [Route("api/employees/register")]
 [SwaggerTag("従業員登録")]
 public class RegisterEmployeeController : ControllerBase
 {
-    private readonly IRegisterEmployeeUseCase _useCase;
+    private readonly IRegisterEmployeeUseCase _usecase;
     private readonly InputEmployeeViewModelAdapter _adapter;
     /// <summary>
     /// コンストラクタ
     /// </summary>
-    /// <param name="useCase">従業員登録ユースケースを実現するインターフェイス</param>
+    /// <param name="usecase">従業員登録ユースケースを実現するインターフェイス</param>
+    /// <param name="adapter">IputEmployeeViewModelからEmployeeを復元するAdapter</param>
     public RegisterEmployeeController(
-        IRegisterEmployeeUseCase useCase,
+        IRegisterEmployeeUseCase usecase,
         InputEmployeeViewModelAdapter adapter)
     {
-        _useCase = useCase;
+        _usecase = usecase;
         _adapter = adapter;
     }
 
@@ -35,7 +36,7 @@ public class RegisterEmployeeController : ControllerBase
     [SwaggerOperation(Summary = "すべての部署を取得します。")]
     public async Task<IActionResult> GetDepartments()
     {
-        var result = await _useCase.GetDepartmentsAsync();
+        var result = await _usecase.GetDepartmentsAsync();
         return Ok(result);
     }
 
@@ -46,7 +47,7 @@ public class RegisterEmployeeController : ControllerBase
     /// <returns></returns>
     [HttpPost]
     [SwaggerOperation(Summary = "従業員を登録します。")]
-    public async Task<IActionResult> Register([FromBody] RegisterEmployeeViewModel model)
+    public async Task<IActionResult> Register([FromBody] InputEmployeeViewModel model)
     {
         // バリデーションチェックエラー
         if (!ModelState.IsValid)
@@ -58,10 +59,10 @@ public class RegisterEmployeeController : ControllerBase
             // RegisterEmployeeViewModelからEmployee復元する
             var employee = await _adapter.RestoreAsync(model);
             // 職部署を取得する
-            var department = await _useCase.GetDepartmentByIdAsync(model.DepartmentId);
+            var department = await _usecase.GetDepartmentByIdAsync(model.DepartmentId);
             employee.ChangeDepartment(department);
             // 従業員を永続化する
-            await _useCase.RegisterEmployeeAsync(employee);
+            await _usecase.RegisterEmployeeAsync(employee);
             return Created("", new { message = $"従業員:{model.Name}を登録しました。" });
         }
         catch (NotFoundException ex)
@@ -71,7 +72,7 @@ public class RegisterEmployeeController : ControllerBase
     }
 
     /// <summary>
-    /// RegisterEmployeeViewModelからの部署Id有無チェック要求
+    /// InputEmployeeViewModelからの部署Id有無チェック要求
     /// </summary>
     /// <param name="departmentId"></param>
     /// <returns></returns> 
@@ -81,7 +82,7 @@ public class RegisterEmployeeController : ControllerBase
     {
         try
         {
-            var result = await _useCase.GetDepartmentByIdAsync(departmentId!);
+            var result = await _usecase.GetDepartmentByIdAsync(departmentId!);
             return new JsonResult(true);
         }
         catch (NotFoundException ex)
