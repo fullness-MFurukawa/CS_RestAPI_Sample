@@ -23,6 +23,11 @@ public class AppDbContext : DbContext
     /// </summary>
     public DbSet<EmployeeEntity> Employees => Set<EmployeeEntity>();
 
+    /// <summary>
+    /// ユーザーテーブル
+    /// </summary>
+    public DbSet<UserEntity> Users => Set<UserEntity>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // Department: dept_uuid に一意制約を追加
@@ -41,5 +46,18 @@ public class AppDbContext : DbContext
             .HasPrincipalKey(d => d.Id)          // 主キーは dept_id (int)
             .HasConstraintName("employee_ibfk_1")
             .OnDelete(DeleteBehavior.SetNull);
+        
+        // ユーザーエンティティの制約（ユニークインデックスなど）を定義可能
+        modelBuilder.Entity<UserEntity>()
+            .HasIndex(u => u.UserUuid)
+            .IsUnique();
+
+        modelBuilder.Entity<UserEntity>()
+            .HasIndex(u => u.Username)
+            .IsUnique();
+
+        modelBuilder.Entity<UserEntity>()
+            .HasIndex(u => u.Email)
+            .IsUnique();
     }
 }
