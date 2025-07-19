@@ -60,7 +60,7 @@ public class UpdateEmployeeController : ControllerBase
         }
         catch (NotFoundException ex)
         {
-             return NotFound(new { message = ex.Message });
+            return NotFound(new { message = ex.Message });
         }
     }
 
@@ -91,6 +91,27 @@ public class UpdateEmployeeController : ControllerBase
         catch (NotFoundException ex)
         {
             return NotFound(new { message = ex.Message });
+        }
+    }
+    
+    /// <summary>
+    /// InputEmployeeViewModelからの部署Id有無チェック要求
+    /// </summary>
+    /// <param name="departmentId"></param>
+    /// <returns></returns> 
+    //[AcceptVerbs("Get", "Post")]
+    [HttpGet("VerifyDepartmentId")]
+    public async Task<IActionResult> VerifyDepartmentId(string departmentId)
+    {
+        try
+        {
+            var result = await _usecase.GetDepartmentByIdAsync(departmentId!);
+            return new JsonResult(true);
+        }
+        catch (NotFoundException ex)
+        {
+            // 見つからなかった場合は例外メッセージを返す
+            return new JsonResult(ex.Message);
         }
     }
 }

@@ -19,7 +19,7 @@ public class UpdateEmployeeViewModel
     public string Name { get; set; } = string.Empty;
 
     // 選択された部署Id
-    [Required(ErrorMessage = "従業員名は必須です。")]
+    [Required(ErrorMessage = "部署Idは必須です。")]
     [Remote("/api/employees/update/VerifyDepartmentId")]
     public string DepartmentId { get; set; } = string.Empty;
 }
