@@ -21,5 +21,5 @@ public interface IDeleteEmployeeUsecase
     /// </summary>
     /// <param name="id">従業員Id</param>
     /// <exception cref="NotFoundException">従業員が存在しない場合にスローされる</exception>
-    Task DeleteEmployee(string id);
+    Task DeleteEmployeeAsync(string id);
 }

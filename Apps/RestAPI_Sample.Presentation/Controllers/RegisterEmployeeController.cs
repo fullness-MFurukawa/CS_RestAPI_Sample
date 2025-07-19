@@ -14,15 +14,15 @@ namespace RestAPI_Sample.Presentation.Controllers;
 public class RegisterEmployeeController : ControllerBase
 {
     private readonly IRegisterEmployeeUseCase _usecase;
-    private readonly InputEmployeeViewModelAdapter _adapter;
+    private readonly RegisterEmployeeViewModelAdapter _adapter;
     /// <summary>
     /// コンストラクタ
     /// </summary>
     /// <param name="usecase">従業員登録ユースケースを実現するインターフェイス</param>
-    /// <param name="adapter">IputEmployeeViewModelからEmployeeを復元するAdapter</param>
+    /// <param name="adapter">RegisterEmployeeViewModelからEmployeeを復元するAdapter</param>
     public RegisterEmployeeController(
         IRegisterEmployeeUseCase usecase,
-        InputEmployeeViewModelAdapter adapter)
+        RegisterEmployeeViewModelAdapter adapter)
     {
         _usecase = usecase;
         _adapter = adapter;
@@ -47,7 +47,7 @@ public class RegisterEmployeeController : ControllerBase
     /// <returns></returns>
     [HttpPost]
     [SwaggerOperation(Summary = "従業員を登録します。")]
-    public async Task<IActionResult> Register([FromBody] InputEmployeeViewModel model)
+    public async Task<IActionResult> Register([FromBody] RegisterEmployeeViewModel model)
     {
         // バリデーションチェックエラー
         if (!ModelState.IsValid)
@@ -56,7 +56,7 @@ public class RegisterEmployeeController : ControllerBase
         }
         try
         {
-            // RegisterEmployeeViewModelからEmployee復元する
+            // InputEmployeeViewModelからEmployee復元する
             var employee = await _adapter.RestoreAsync(model);
             // 職部署を取得する
             var department = await _usecase.GetDepartmentByIdAsync(model.DepartmentId);

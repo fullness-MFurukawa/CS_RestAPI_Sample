@@ -30,7 +30,7 @@ public class DeleteEmployeeInteractor : IDeleteEmployeeUsecase
     /// <param name="id">従業員Id</param>
     /// <returns>該当従業員</returns>
     /// <exception cref="NotFoundException">従業員が存在しない場合にスローされる</exception>
-    public async Task DeleteEmployee(string id)
+    public async Task DeleteEmployeeAsync(string id)
     {
         // トランザクションを開始する
         await _unitOfWork.BeginAsync();

@@ -67,7 +67,7 @@ public class DeleteEmployeeInteractorTests
         _mockEmpRepo.Setup(r => r.DeleteByIdAsync(id)).ReturnsAsync(false);
         // メソッドを実行してNotFoundException例外を受け取る
         var ex = await Assert.ThrowsExceptionAsync<NotFoundException>(
-            () => _interactor.DeleteEmployee(id));
+            () => _interactor.DeleteEmployeeAsync(id));
         // トランザクションが開始されたことを検証する
         _mockUnitOfWork.Verify(u => u.BeginAsync(), Times.Once);
         // トランザクションがロールバックされたことを検証する
@@ -88,7 +88,7 @@ public class DeleteEmployeeInteractorTests
         _mockEmpRepo.Setup(r => r.DeleteByIdAsync(id)).ThrowsAsync(new Exception("DBエラー"));
         // メソッドを実行して例外がスローされたことを検証する
         await Assert.ThrowsExceptionAsync<Exception>(
-            () => _interactor.DeleteEmployee(id));
+            () => _interactor.DeleteEmployeeAsync(id));
         // トランザクションが開始されたことを検証する
         _mockUnitOfWork.Verify(u => u.BeginAsync(), Times.Once);
         // トランザクションがロールバックされたことを検証する
@@ -104,7 +104,7 @@ public class DeleteEmployeeInteractorTests
         // Repositoryのモックにテストデータを設定する
         _mockEmpRepo.Setup(r => r.DeleteByIdAsync(id)).ReturnsAsync(true);
         // メソッドを実行する
-        await _interactor.DeleteEmployee(id);
+        await _interactor.DeleteEmployeeAsync(id);
         // トランザクションが開始されたことを検証する
         _mockUnitOfWork.Verify(u => u.BeginAsync(), Times.Once);
         // 削除メソッドが実行されたことを検証する

@@ -24,7 +24,8 @@ public class UpdateEmployeeInteractor : IUpdateEmployeeUsecase
         _employeeRepository = employeeRepository;
         _unitOfWork = unitOfWork;
     }
-    
+
+
     /// <summary>
     /// すべての部署を取得する
     /// クライアント側の[入力画面]で利用するプルダウンを作成するため
@@ -34,6 +35,24 @@ public class UpdateEmployeeInteractor : IUpdateEmployeeUsecase
     {
         var results = await _departmentRepository.SelectAllAync();
         return results;
+    }
+
+    /// <summary>
+    /// 指定された部署Idの部署を取得する
+    /// クライアント側の[確認画面]、[完了画面]で利用するため
+    /// </summary>
+    /// <param name="id">部署Id</param>
+    /// <returns>該当部署</returns>
+    /// <exception cref="NotFoundException">該当データが存在しない場合にスローされる</exception>
+    public async Task<Department> GetDepartmentByIdAsync(string id)
+    {
+        var result = await _departmentRepository.SelectByIdAsync(id);
+        if (result == null)
+        {
+            throw new NotFoundException(
+                $"部署Id:{id}に一致する部署は存在しません。");
+        }
+        return result;
     }
 
     /// <summary>

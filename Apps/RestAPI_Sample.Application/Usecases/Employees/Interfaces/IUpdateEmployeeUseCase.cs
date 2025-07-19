@@ -14,6 +14,15 @@ public interface IUpdateEmployeeUsecase
     Task<List<Department>> GetDepartmentsAsync();
 
     /// <summary>
+    /// 指定された部署Idの部署を取得する
+    /// クライアント側の[確認画面]、[完了画面]で利用するため
+    /// </summary>
+    /// <param name="id">部署Id</param>
+    /// <returns>該当部署</returns>
+    /// <exception cref="NotFoundException">該当データが存在しない場合にスローされる</exception>
+    Task<Department> GetDepartmentByIdAsync(string   id);
+
+    /// <summary>
     /// 指定された従業員Idの従業員を取得する
     /// クライアント側の[削除画面]で利用するため
     /// </summary>
@@ -21,6 +30,7 @@ public interface IUpdateEmployeeUsecase
     /// <returns>該当従業員</returns>
     /// <exception cref="NotFoundException">従業員が存在しない場合にスローされる</exception>
     Task<Employee> GetEmployeeByIdAsync(string id);
+
 
     /// <summary>
     /// 従業員を更新する

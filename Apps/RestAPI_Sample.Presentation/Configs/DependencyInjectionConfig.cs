@@ -8,8 +8,6 @@ using RestAPI_Sample.Application.Usecases;
 using RestAPI_Sample.Application.Usecases.Employees.Interfaces;
 using RestAPI_Sample.Application.Usecases.Employees.Interactors;
 using RestAPI_Sample.Presentation.ViewModels;
-    using RestAPI_Sample.Application.Domains.Models;
-
 namespace RestAPI_Sample.Presentation.Configs;
 /// <summary>
 /// 依存関係定義クラス
@@ -69,6 +67,7 @@ public static class DependencyInjectionConfig
         services.AddScoped<ISearchEmployeesByKeywordUseCase, SearchEmployeesByKeywordInteractor>();
         services.AddScoped<IRegisterEmployeeUseCase, RegisterEmployeeInteractor>();
         services.AddScoped<IUpdateEmployeeUsecase, UpdateEmployeeInteractor>();
+        services.AddScoped<IDeleteEmployeeUsecase, DeleteEmployeeInteractor>();
     }
 
     /// <summary>
@@ -77,6 +76,7 @@ public static class DependencyInjectionConfig
     /// <param name="services">依存性注入インターフェイス</param>
     private static void AddPresentationServices(IServiceCollection services)
     {
-        services.AddScoped<InputEmployeeViewModelAdapter>();
+        services.AddScoped<RegisterEmployeeViewModelAdapter>();
+        services.AddScoped<UpdateEmployeeViewModelAdapter>();
     }
 }
