@@ -46,8 +46,11 @@ public class AppDbContext : DbContext
             .HasPrincipalKey(d => d.Id)          // 主キーは dept_id (int)
             .HasConstraintName("employee_ibfk_1")
             .OnDelete(DeleteBehavior.SetNull);
-        
+
         // ユーザーエンティティの制約（ユニークインデックスなど）を定義可能
+        modelBuilder.Entity<UserEntity>()
+            .Property(u => u.UserUuid)
+            .HasColumnType("char(36)"); 
         modelBuilder.Entity<UserEntity>()
             .HasIndex(u => u.UserUuid)
             .IsUnique();

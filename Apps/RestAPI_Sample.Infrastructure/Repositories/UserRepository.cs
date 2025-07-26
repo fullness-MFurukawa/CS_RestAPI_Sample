@@ -30,8 +30,8 @@ public class UserRepository : IUserRepository
     {
         try
         {
-            return await _context.Users
-            .AnyAsync(u => u.Username == username || u.Email == email);
+            return await _context.Users  // ← DbSet<UserEntity>
+            .AnyAsync(u => u.Username == username || u.Email == email);  // u: UserEntity
         }
         catch (Exception ex)
         {
@@ -68,7 +68,7 @@ public class UserRepository : IUserRepository
         {
             var entity = await _context.Users
             .AsNoTracking()
-            .FirstOrDefaultAsync(u => u.UserUuid == userId);
+            .FirstOrDefaultAsync(u => u.UserUuid.ToString() == userId);
             return entity != null ? await _adapter.RestoreAsync(entity) : null;
         }
         catch (Exception ex)
@@ -78,6 +78,7 @@ public class UserRepository : IUserRepository
                 $"ユーザーIdでのユーザー取得に失敗しました。 userId={userId}", ex);
         }
     }
+
     /// <summary>
     /// ユーザーを永続化する
     /// </summary>
@@ -95,5 +96,18 @@ public class UserRepository : IUserRepository
             throw new InternalException(
                 $"ユーザー永続化に失敗しました。 user={user}", ex);
         }
+    }
+
+    /// <summary>
+    /// ユーザー名またはパスワードからユーザーを取得する
+    /// </summary>
+    /// <param name="usernameOrEmail">ユーザー名またはメールアドレス</param>
+    /// <returns></returns>
+    public async Task<User?> FindByUsernameOrEmailAsync(string usernameOrEmail)
+    {
+        var entity = await _context.Users
+        .FirstOrDefaultAsync(u => u.Username == usernameOrEmail || u.Email == usernameOrEmail);
+
+        return entity != null ? await _adapter.RestoreAsync(entity) : null;
     }
 }

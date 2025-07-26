@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using RestAPI_Sample.Application.Usecases.Employees.Interfaces;
 using RestAPI_Sample.Application.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 namespace RestAPI_Sample.Presentation.Controllers;
 /// <summary>
 /// 従業員キーワード検索 API Controller
@@ -26,6 +27,7 @@ public class SearchEmployeesByKeywordController : ControllerBase
     /// </summary>
     /// <param name="keyword">検索キーワード</param>
     /// <returns></returns>
+    [Authorize] 
     [HttpGet]
     [SwaggerOperation(Summary = "従業員名に指定キーワードを含むデータを検索します。")]
     public async Task<IActionResult> Get([FromQuery] string? keyword)

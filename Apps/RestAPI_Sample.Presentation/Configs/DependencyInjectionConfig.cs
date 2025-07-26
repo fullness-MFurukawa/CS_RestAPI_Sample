@@ -8,6 +8,10 @@ using RestAPI_Sample.Application.Usecases;
 using RestAPI_Sample.Application.Usecases.Employees.Interfaces;
 using RestAPI_Sample.Application.Usecases.Employees.Interactors;
 using RestAPI_Sample.Presentation.ViewModels;
+using RestAPI_Sample.Application.Usecases.Users.interfaces;
+using RestAPI_Sample.Application.Usecases.Users.Interactors;
+using RestAPI_Sample.Application.Security;
+using RestAPI_Sample.Infrastructure.Security;
 namespace RestAPI_Sample.Presentation.Configs;
 /// <summary>
 /// 依存関係定義クラス
@@ -50,11 +54,17 @@ public static class DependencyInjectionConfig
         // Adapterを依存性注入に登録
         services.AddScoped<DepartmentEntityAdapter>();
         services.AddScoped<EmployeeEntityAdapter>();
+        services.AddScoped<UserEntityAdapter>();
         // Repositoryインターフェイスの実装を依存性注入に登録
         services.AddScoped<IDepartmentRepository, DepartmentRepository>();
         services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
         // IUnitOfWorkインターフェイスの実装を依存性注入に登録
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        // ASP.NET Core IdentityのPasswordHasherを利用したパスワードハッシュ化インターフェイス実装
+        services.AddScoped<IPasswordHasher, AspNetPasswordHasher>();
+        // JWTトークンを生成する実装クラス
+        services.AddScoped<IJwtTokenProvider, JwtTokenProvider>();
     }
 
     /// <summary>
@@ -68,6 +78,8 @@ public static class DependencyInjectionConfig
         services.AddScoped<IRegisterEmployeeUseCase, RegisterEmployeeInteractor>();
         services.AddScoped<IUpdateEmployeeUsecase, UpdateEmployeeInteractor>();
         services.AddScoped<IDeleteEmployeeUsecase, DeleteEmployeeInteractor>();
+        services.AddScoped<IRegisterUserUsecase, RegisterUserInteractor>();
+        services.AddScoped<ILoginUserUsecase, LoginUserInteractor>();
     }
 
     /// <summary>
@@ -78,5 +90,7 @@ public static class DependencyInjectionConfig
     {
         services.AddScoped<RegisterEmployeeViewModelAdapter>();
         services.AddScoped<UpdateEmployeeViewModelAdapter>();
+        services.AddScoped<RegisterUserViewModelAdapter>();
+        services.AddScoped<LoginUserViewModelAdapter>();
     }
 }

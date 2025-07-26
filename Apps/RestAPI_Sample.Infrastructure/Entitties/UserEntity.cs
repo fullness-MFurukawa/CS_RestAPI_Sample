@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
 namespace RestAPI_Sample.Infrastructure.Entitties;
 /// <summary>
 /// users テーブルに対応するEntity Framework Coreのエンティティ
@@ -19,8 +18,9 @@ public class UserEntity
     /// UUID（外部公開用）
     /// </summary>
     [Required]
-    [Column("user_uuid", TypeName = "char(36)")]
-    public string UserUuid { get; set; } = string.Empty;
+    [Column("user_uuid")]
+    [StringLength(36)]
+    public Guid UserUuid { get; set; }
 
     /// <summary>
     /// ユーザー名（ログイン名または表示名）
@@ -47,18 +47,11 @@ public class UserEntity
     public string PasswordHash { get; set; } = string.Empty;
 
     /// <summary>
-    /// パスワードソルト
-    /// </summary>
-    [Required]
-    [Column("salt")]
-    [StringLength(64)]
-    public string Salt { get; set; } = string.Empty;
-
-    /// <summary>
     /// 登録日時
     /// </summary>
     [Required]
     [Column("created_at")]
+    [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
     public DateTime CreatedAt { get; set; }
 
     /// <summary>
@@ -66,6 +59,7 @@ public class UserEntity
     /// </summary>
     [Required]
     [Column("updated_at")]
+    [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
     public DateTime UpdatedAt { get; set; }
 
     public override string ToString()

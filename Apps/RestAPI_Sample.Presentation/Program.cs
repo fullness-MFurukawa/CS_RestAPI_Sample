@@ -1,76 +1,94 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Text;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ✅ Controllerサービスを登録（これがないと MapControllers で例外）
+// Controllerの登録
 builder.Services.AddControllers();
-
-// アプリケーション構成要素の依存関係定義
+// Usecse Repository Adapterの依存定義追加
 RestAPI_Sample.Presentation.Configs
     .DependencyInjectionConfig.ConfigureDependencies(
         builder.Configuration, builder.Services);
 
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+// 🔐 Add JWT Authentication
+var jwtSettings = builder.Configuration.GetSection("JwtSettings");
+var secretKey = jwtSettings["SecretKey"];
+var issuer = jwtSettings["Issuer"];
+var audience = jwtSettings["Audience"];
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = issuer,
+        ValidAudience = audience,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+    };
+});
+
+// 🔹 Swagger with JWT support
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>{
-    c.EnableAnnotations(); // Swashbuckle のアノテーション属性
+builder.Services.AddSwaggerGen(c =>
+{
     c.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "C# Web API編(ASP.NET Core) サンプルアプリケーション",
-        Version = "1.0.0", // ✅ ← バージョンは "v1" などの文字列が必要
-        Description = "Web APIサンプル"
+        Title = "RestAPI Sample",
+        Version = "v1"
+    });
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT 認証トークンを 'Bearer {token}' の形式で入力してください",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT"
+    });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new List<string>()
+        }
     });
 });
 
 var app = builder.Build();
 
-// ✅ Controllerのルートマッピングを追加
-app.MapControllers();
-
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
-        // ✅ これを必ず指定する（Swagger JSONへのエンドポイント）
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "C# Web API編(ASP.NET Core) サンプルアプリケーション");
-
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "RestAPI Sample v1");
     });
 }
 
 app.UseHttpsRedirection();
-/*
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
-*/
+app.UseAuthentication(); 
+app.UseAuthorization();
 
-// ✅ Controller ルートのマッピング（AddControllersが前提）
 app.MapControllers();
 
 app.Run();
-/*
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
-*/

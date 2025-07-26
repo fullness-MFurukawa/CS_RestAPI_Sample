@@ -24,4 +24,10 @@ public interface IUserRepository
     /// ユーザーUUIDから取得
     /// </summary>
     Task<User?> FindByIdAsync(string userId);
+    /// <summary>
+    /// ユーザー名またはパスワードからユーザーを取得する
+    /// </summary>
+    /// <param name="usernameOrEmail">ユーザー名またはメールアドレス</param>
+    /// <returns></returns>
+    Task<User?> FindByUsernameOrEmailAsync(string usernameOrEmail);
 }

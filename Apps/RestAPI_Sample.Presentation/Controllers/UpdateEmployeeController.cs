@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RestAPI_Sample.Application.Exceptions;
 using RestAPI_Sample.Application.Usecases.Employees.Interfaces;
@@ -31,6 +32,7 @@ public class UpdateEmployeeController : ControllerBase
     /// リクエストハンドラ
     /// </summary>
     /// <returns></returns>
+    [Authorize] 
     [HttpGet("departments")]
     [SwaggerOperation(Summary = "すべての部署を取得します。")]
     public async Task<IActionResult> GetDepartments()
@@ -45,6 +47,7 @@ public class UpdateEmployeeController : ControllerBase
     /// </summary>
     /// <param name="employeeId">従業員Id</param>
     /// <returns></returns>
+    [Authorize] 
     [HttpGet("{employeeId}")]
     [SwaggerOperation(Summary = "指定された従業員Idの従業員を取得します。")]
     public async Task<IActionResult> GetEmployeeIdAsync(string employeeId)
@@ -64,6 +67,7 @@ public class UpdateEmployeeController : ControllerBase
         }
     }
 
+    [Authorize] 
     [HttpPut]
     [SwaggerOperation(Summary = "従業員の氏名または所属部署を変更します。")]
     public async Task<IActionResult> UpdateEmployeeAsync([FromBody] UpdateEmployeeViewModel model)
@@ -93,13 +97,14 @@ public class UpdateEmployeeController : ControllerBase
             return NotFound(new { message = ex.Message });
         }
     }
-    
+
     /// <summary>
     /// InputEmployeeViewModelからの部署Id有無チェック要求
     /// </summary>
     /// <param name="departmentId"></param>
     /// <returns></returns> 
     //[AcceptVerbs("Get", "Post")]
+    [Authorize] 
     [HttpGet("VerifyDepartmentId")]
     public async Task<IActionResult> VerifyDepartmentId(string departmentId)
     {

@@ -26,35 +26,30 @@ public class User : IEquatable<User>
     /// パスワードのハッシュ
     /// </summary>
     public string PasswordHash { get; private set; }
-    /// <summary>
-    /// ソルト(レインボーテーブル攻撃の無効化)
-    /// </summary>
-    public string Salt { get; private set; }
-
+  
     /// <summary>
     /// コンストラクタ（既存IDあり）
     /// </summary>
-    public User(string id, string username, string email, string passwordHash, string salt)
+    public User(string id, string username, string email, string passwordHash)
     {
-        UserValidate(id, username, email, passwordHash, salt);
+        UserValidate(id, username, email, passwordHash);
         Id = id;
         Username = username;
         Email = email;
         PasswordHash = passwordHash;
-        Salt = salt;
     }
 
     /// <summary>
     /// コンストラクタ（新規ユーザー）
     /// </summary>
-    public User(string username, string email, string passwordHash, string salt)
-        : this(Guid.NewGuid().ToString(), username, email, passwordHash, salt) { }
+    public User(string username, string email, string passwordHash)
+        : this(Guid.NewGuid().ToString(), username, email, passwordHash) { }
 
     /// <summary>
     /// 入力値バリデーション
     /// </summary>
     private void UserValidate(
-        string id, string username, string email, string passwordHash, string salt)
+        string id, string username, string email, string passwordHash)
     {
         if (string.IsNullOrWhiteSpace(id) || !Guid.TryParse(id, out _))
             throw new DomainException("ユーザーIDはUUID形式で指定してください。");
@@ -68,8 +63,6 @@ public class User : IEquatable<User>
             throw new DomainException("メールアドレスは100文字以内で指定してください。");
         if (string.IsNullOrWhiteSpace(passwordHash))
             throw new DomainException("パスワードハッシュは必須です。");
-        if (string.IsNullOrWhiteSpace(salt))
-            throw new DomainException("ソルトは必須です。");
     }
 
     /// <summary>
@@ -104,16 +97,6 @@ public class User : IEquatable<User>
         if (string.IsNullOrWhiteSpace(newPasswordHash))
             throw new DomainException("パスワードハッシュは必須です。");
         PasswordHash = newPasswordHash;
-    }
-
-    /// <summary>
-    /// ソルトを変更
-    /// </summary>
-    public void ChangeSalt(string newSalt)
-    {
-        if (string.IsNullOrWhiteSpace(newSalt))
-            throw new DomainException("ソルトは必須です。");
-        Salt = newSalt;
     }
 
     /// <summary>

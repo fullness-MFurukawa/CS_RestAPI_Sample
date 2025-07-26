@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RestAPI_Sample.Application.Exceptions;
 using RestAPI_Sample.Application.Usecases.Employees.Interfaces;
@@ -26,6 +27,7 @@ public class DeleteEmployeeController : ControllerBase
     /// </summary>
     /// <param name="employeeId">従業員Id</param>
     /// <returns></returns>
+    [Authorize] 
     [HttpDelete("{employeeId}")]
     [SwaggerOperation(Summary = "従業員を削除します。")]
     public async Task<IActionResult> DeleteEmployeeAsync(string employeeId)

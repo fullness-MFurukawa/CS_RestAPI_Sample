@@ -25,3 +25,18 @@ EsgwXi51YiNOw2bKPy+DDE7qz0Yq0EablZIrMB5Zb3w=
 | `Audience`         | トークンの**対象者（使う側）**。アクセスを許可するクライアントやアプリの識別子           | 例：`"RestAPI_Client"`<br>（Webフロントやモバイルなど）   |
 | `SecretKey`        | JWTに**署名・検証**を行うための**秘密鍵**。安全なランダム文字列で、外部に漏れないよう注意 | 例：`"WcZ3...sg8="`<br>（Base64形式が一般的）              |
 | `ExpiresInMinutes` | トークンの**有効期限（分）**。これを超えるとトークンは無効になる                         | 例：`60` → 60分間有効                                     |
+
+
+
+## 2. ASP.NET Core Identity
+### 2-1. 概要
+- ※パスワードハッシュ化機能は、内部的にソルトを生成して利用する機能をサポートしている。
+- ソルト(レインボーテーブル攻撃の無効化)
+### 2-2.インストール
+```bash
+dotnet add package Microsoft.AspNetCore.Identity
+```
+```bash
+dotnet add package Microsoft.IdentityModel.Tokens
+dotnet add package System.IdentityModel.Tokens.Jwt
+```

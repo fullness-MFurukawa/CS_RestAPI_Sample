@@ -2,9 +2,7 @@ using RestAPI_Sample.Application.Domains.Adapters;
 using RestAPI_Sample.Application.Domains.Models;
 using RestAPI_Sample.Application.Exceptions;
 using RestAPI_Sample.Infrastructure.Entitties;
-
 namespace RestAPI_Sample.Infrastructure.Adapters;
-
 /// <summary>
 /// ドメインオブジェクト:UserとUserEntityの相互変換クラス
 /// </summary> 
@@ -25,11 +23,10 @@ IConverter<User, UserEntity>, IRestorer<User, UserEntity>
             throw new InternalException("引数domainがnullです。");
         }
         var entity = new UserEntity();
-        entity.UserUuid = domain.Id;
+        entity.UserUuid = Guid.Parse(domain.Id);
         entity.Username = domain.Username;
         entity.Email = domain.Email;
         entity.PasswordHash = domain.PasswordHash;
-        entity.Salt = domain.Salt;
         return Task.FromResult(entity);
     }
     /// <summary>
@@ -44,7 +41,7 @@ IConverter<User, UserEntity>, IRestorer<User, UserEntity>
             throw new InternalException("引数targetがnullです。");
         }
         var domain = new User(
-            target.UserUuid, target.Username, target.Email, target.PasswordHash, target.Salt);
+            target.UserUuid.ToString(), target.Username, target.Email, target.PasswordHash);
         return Task.FromResult(domain);
     }
 }

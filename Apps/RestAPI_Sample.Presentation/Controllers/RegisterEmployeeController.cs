@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RestAPI_Sample.Application.Exceptions;
 using RestAPI_Sample.Application.Usecases.Employees.Interfaces;
@@ -32,6 +33,7 @@ public class RegisterEmployeeController : ControllerBase
     /// リクエストハンドラ
     /// </summary>
     /// <returns></returns>
+    [Authorize] 
     [HttpGet("departments")]
     [SwaggerOperation(Summary = "すべての部署を取得します。")]
     public async Task<IActionResult> GetDepartments()
@@ -45,6 +47,7 @@ public class RegisterEmployeeController : ControllerBase
     /// </summary>
     /// <param name="model">登録する従業員データ</param>
     /// <returns></returns>
+    [Authorize] 
     [HttpPost]
     [SwaggerOperation(Summary = "従業員を登録します。")]
     public async Task<IActionResult> Register([FromBody] RegisterEmployeeViewModel model)
