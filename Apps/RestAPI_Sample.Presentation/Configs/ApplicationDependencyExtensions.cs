@@ -1,4 +1,7 @@
-using Microsoft.EntityFrameworkCore; 
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using RestAPI_Sample.Infrastructure.Contexts;
 using RestAPI_Sample.Infrastructure.Adapters;
 using RestAPI_Sample.Infrastructure.Repositories;
@@ -7,90 +10,94 @@ using RestAPI_Sample.Application.Domains.Repositories;
 using RestAPI_Sample.Application.Usecases;
 using RestAPI_Sample.Application.Usecases.Employees.Interfaces;
 using RestAPI_Sample.Application.Usecases.Employees.Interactors;
-using RestAPI_Sample.Presentation.ViewModels;
 using RestAPI_Sample.Application.Usecases.Users.interfaces;
 using RestAPI_Sample.Application.Usecases.Users.Interactors;
+using RestAPI_Sample.Presentation.ViewModels;
 using RestAPI_Sample.Application.Security;
 using RestAPI_Sample.Infrastructure.Security;
+
 namespace RestAPI_Sample.Presentation.Configs;
+
 /// <summary>
-/// 依存関係定義クラス
+/// DI設定（インフラ・アプリケーション・プレゼンテーション層）をまとめて追加する拡張クラス
 /// </summary>
-public static class DependencyInjectionConfig
+public static class ApplicationDependencyExtensions
 {
+
     /// <summary>
-    /// 依存関係定義メソッド
+    /// アプリ全体の依存関係（DI）を一括追加する拡張メソッド
     /// </summary>
-    /// <param name="config">アプリケーションの構成設定インターフェイス</param>
-    /// <param name="services">依存性注入インターフェイス</param>
-    public static void ConfigureDependencies(
-        IConfiguration config, IServiceCollection services)
+    /// <param name="services">サービスコレクション</param>
+    /// <param name="config">構成情報</param>
+    /// <returns>IServiceCollection（チェーン可能）</returns>
+    public static IServiceCollection AddApplicationDependencies(
+        this IServiceCollection services, IConfiguration config)
     {
-        // インフラストラクチャ層の依存関係定義
-        AddInfrastructureServices(config, services);
-        // アプリケーション層の依存関係定義
-        AddApplicationServices(services);
-        // プレゼンテーション層の依存関係定義
-        AddPresentationServices(services);
+        // 各層の依存関係を追加
+        services.AddInfrastructureDependencies(config);
+        services.AddApplicationLayerDependencies();
+        services.AddPresentationLayerDependencies();
+        return services;
     }
 
     /// <summary>
-    /// インフラストラクチャ層の依存関係定義
+    /// インフラストラクチャ層の依存関係を追加
     /// </summary>
-    /// <param name="config">アプリケーションの構成設定インターフェイス</param>
-    /// <param name="services">依存性注入インターフェイス</param>
-    private static void AddInfrastructureServices(
-        IConfiguration config, IServiceCollection services)
+    private static IServiceCollection AddInfrastructureDependencies(
+        this IServiceCollection services, IConfiguration config)
     {
-        // AppDbContextを依存性注入に登録
+        // DbContext の登録
         var connectstr = config.GetConnectionString("MySqlConnection");
         services.AddDbContext<AppDbContext>(options =>
         {
-            // デバッグレベルのログをコンソール出力する
             options.LogTo(Console.WriteLine, LogLevel.Debug);
-            // MySQLに接続する
             options.UseMySql(connectstr, ServerVersion.AutoDetect(connectstr));
         });
-        // Adapterを依存性注入に登録
+
+        // Adapter の登録
         services.AddScoped<DepartmentEntityAdapter>();
         services.AddScoped<EmployeeEntityAdapter>();
         services.AddScoped<UserEntityAdapter>();
-        // Repositoryインターフェイスの実装を依存性注入に登録
+        // Repository の登録
         services.AddScoped<IDepartmentRepository, DepartmentRepository>();
         services.AddScoped<IEmployeeRepository, EmployeeRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
-        // IUnitOfWorkインターフェイスの実装を依存性注入に登録
+        // Unit of Work の登録
         services.AddScoped<IUnitOfWork, UnitOfWork>();
-        // ASP.NET Core IdentityのPasswordHasherを利用したパスワードハッシュ化インターフェイス実装
+        // セキュリティ関連
         services.AddScoped<IPasswordHasher, AspNetPasswordHasher>();
-        // JWTトークンを生成する実装クラス
         services.AddScoped<IJwtTokenProvider, JwtTokenProvider>();
+        return services;
     }
 
     /// <summary>
-    /// アプリケーション層の依存関係定義
+    /// アプリケーション層の依存関係を追加
     /// </summary>
-    /// <param name="services">依存性注入インターフェイス</param>
-    private static void AddApplicationServices(IServiceCollection services)
+    private static IServiceCollection AddApplicationLayerDependencies(this IServiceCollection services)
     {
-        // ユースケース実現インターフェイスとその実装を登録
+        // ユースケース（UseCase）の実装を登録
         services.AddScoped<ISearchEmployeesByKeywordUseCase, SearchEmployeesByKeywordInteractor>();
         services.AddScoped<IRegisterEmployeeUseCase, RegisterEmployeeInteractor>();
         services.AddScoped<IUpdateEmployeeUsecase, UpdateEmployeeInteractor>();
         services.AddScoped<IDeleteEmployeeUsecase, DeleteEmployeeInteractor>();
         services.AddScoped<IRegisterUserUsecase, RegisterUserInteractor>();
         services.AddScoped<ILoginUserUsecase, LoginUserInteractor>();
+
+        return services;
     }
 
     /// <summary>
-    /// プレゼンテーション層の依存関係定義
+    /// プレゼンテーション層の依存関係を追加
     /// </summary>
-    /// <param name="services">依存性注入インターフェイス</param>
-    private static void AddPresentationServices(IServiceCollection services)
+    private static IServiceCollection AddPresentationLayerDependencies(this IServiceCollection services)
     {
+        // MVCコントローラーとViewModelアダプタの登録
+        services.AddControllers();
         services.AddScoped<RegisterEmployeeViewModelAdapter>();
         services.AddScoped<UpdateEmployeeViewModelAdapter>();
         services.AddScoped<RegisterUserViewModelAdapter>();
         services.AddScoped<LoginUserViewModelAdapter>();
+
+        return services;
     }
 }

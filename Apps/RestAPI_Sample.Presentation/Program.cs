@@ -1,94 +1,24 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using System.Text;
+using RestAPI_Sample.Presentation.Configs;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Controllerの登録
-builder.Services.AddControllers();
-// Usecse Repository Adapterの依存定義追加
-RestAPI_Sample.Presentation.Configs
-    .DependencyInjectionConfig.ConfigureDependencies(
-        builder.Configuration, builder.Services);
-
-
-
-// 🔐 Add JWT Authentication
-var jwtSettings = builder.Configuration.GetSection("JwtSettings");
-var secretKey = jwtSettings["SecretKey"];
-var issuer = jwtSettings["Issuer"];
-var audience = jwtSettings["Audience"];
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = issuer,
-        ValidAudience = audience,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
-    };
-});
-
-// 🔹 Swagger with JWT support
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "RestAPI Sample",
-        Version = "v1"
-    });
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Description = "JWT 認証トークンを 'Bearer {token}' の形式で入力してください",
-        Name = "Authorization",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.Http,
-        Scheme = "bearer",
-        BearerFormat = "JWT"
-    });
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            new List<string>()
-        }
-    });
-});
-
+// アプリケーション全体の依存関係（DI）を一括登録
+builder.Services.AddApplicationDependencies(builder.Configuration);
+// JWT認証設定の追加（拡張メソッドで分離）
+builder.Services.AddJwtAuthentication(builder.Configuration);
+// Swaggerサービスを拡張メソッドで追加（JWT対応含む）
+builder.Services.AddSwaggerWithJwt();
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "RestAPI Sample v1");
-    });
-}
+// 開発環境でのみ Swagger を有効化（UI含む）
+app.UseSwaggerIfDevelopment(app.Environment);
 
+// ミドルウェア構成
 app.UseHttpsRedirection();
-
-app.UseAuthentication(); 
-app.UseAuthorization();
-
+app.UseAuthentication();    // 認証ミドルウェア
+app.UseAuthorization();     // 認可ミドルウェア
+// ルーティング構成（コントローラーをエンドポイントにマッピング）
 app.MapControllers();
-
+// アプリケーション起動
 app.Run();
