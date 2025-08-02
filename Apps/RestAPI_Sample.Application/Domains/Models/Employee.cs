@@ -14,7 +14,7 @@ public class Employee : IEquatable<Employee>
     /// </summary>
     public string Name { get; private set; }
     /// <summary>
-    /// 所属部署
+    /// 所属部署を参照
     /// </summary>
     public Department? Department { get; private set; }
 
