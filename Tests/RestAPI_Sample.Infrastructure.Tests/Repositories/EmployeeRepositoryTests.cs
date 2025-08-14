@@ -181,7 +181,7 @@ public class EmployeeRepositoryTests
         await _repository.CreateAsync(emp1);
         await _repository.CreateAsync(emp2);
         // キーワード検索する
-        var result = await _repository.SelectByNameLikeAsync("テスト");
+        var result = await _repository.SelectByNameLikeWithDepartmentAsync("テスト");
         Assert.IsNotNull(result);
         Assert.IsTrue(result!.Count >= 2);
         Assert.IsTrue(result.Any(e => e.Name == "テスト一郎"));
@@ -191,7 +191,7 @@ public class EmployeeRepositoryTests
     [TestMethod("指定されたキーワードに一致する従業員を取得する（ヒットなし）")]
     public async Task SelectByNameLikeAsync_Miss_ShouldReturnEmpty()
     {
-        var result = await _repository.SelectByNameLikeAsync("未登録名");
+        var result = await _repository.SelectByNameLikeWithDepartmentAsync("未登録名");
         Assert.IsNotNull(result);
         Assert.AreEqual(0, result!.Count);
     }

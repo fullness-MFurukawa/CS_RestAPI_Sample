@@ -121,7 +121,7 @@ public class EmployeeRepository : IEmployeeRepository
     /// </summary>
     /// <param name="keyword">キーワード</param>
     /// <returns>従業員のリスト</returns>
-    public async Task<List<Employee>?> SelectByNameLikeAsync(string keyword)
+    public async Task<List<Employee>?> SelectByNameLikeWithDepartmentAsync(string keyword)
     {
         try
         {

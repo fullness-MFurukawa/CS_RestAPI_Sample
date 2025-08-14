@@ -1,5 +1,4 @@
 using RestAPI_Sample.Application.Domains.Models;
-
 namespace RestAPI_Sample.Application.Domains.Repositories;
 /// <summary>
 /// ドメインオブジェクト:Employee(従業員)のCRUD操作インターフェイス
@@ -22,11 +21,11 @@ public interface IEmployeeRepository
     /// <param name="id">従業員Id</param>
     Task<bool> DeleteByIdAsync(string id);
     /// <summary>
-    /// 従業員をキーワード検索する
+    /// 従業員をキーワード検索し、所属部署も取得する
     /// </summary>
     /// <param name="keyword">キーワード</param>
     /// <returns>従業員のリスト</returns>
-    Task<List<Employee>?> SelectByNameLikeAsync(string keyword);
+    Task<List<Employee>?> SelectByNameLikeWithDepartmentAsync(string keyword);
     /// <summary>
     /// 指定された従業員Idで従業員を取得する
     /// </summary>
