@@ -18,10 +18,9 @@ IConverter<Department, DepartmentEntity>, IRestorer<Department, DepartmentEntity
     /// <returns>EFCore:DepartmentEntity</returns>
     public Task<DepartmentEntity> ConvertAsync(Department domain)
     {
-        if (domain == null)
-        {
-            throw new InternalException("引数domainがnullです。");
-        }
+        // 引数domainがnullの場合
+        _ = domain ?? throw new InternalException("引数domainがnullです。");
+        // ドメインオブジェクト:DepartmentをDepartmentEntityに変換する
         var entity = new DepartmentEntity();
         entity.Uuid = domain.Id;
         entity.Name = domain.Name;
@@ -34,10 +33,9 @@ IConverter<Department, DepartmentEntity>, IRestorer<Department, DepartmentEntity
     /// <returns>ドメインオブジェクト:Department</returns>
     public Task<Department> RestoreAsync(DepartmentEntity target)
     {
-        if (target == null)
-        {
-            throw new InternalException("引数targetがnullです。");
-        }
+        // 引数targetがnullの場合
+        _ = target ?? throw new InternalException("引数targetがnullです。");
+        // DepartemtnEntityからドメインオブジェクト:Departmentを復元する
         var domain = new Department(target.Uuid, target.Name);
         return Task.FromResult(domain);
     }

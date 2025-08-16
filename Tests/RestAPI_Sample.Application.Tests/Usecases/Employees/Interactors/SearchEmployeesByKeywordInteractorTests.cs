@@ -38,7 +38,7 @@ public class SearchEmployeesByKeywordInteractorTests
         var expected = new List<Employee> { emp1, emp2, emp3 };
         // モックのRepositoryにテストデータを設定する
         _mockRepository
-        .Setup(r => r.SelectByNameLikeAsync(keyword))
+        .Setup(r => r.SelectByNameLikeWithDepartmentAsync(keyword))
         .ReturnsAsync(expected);
         // キーワード検索する
         var result = await _interactor.ExecuteAsync(keyword);
@@ -56,7 +56,7 @@ public class SearchEmployeesByKeywordInteractorTests
         var keyword = "存在しない名前";
         // 空リストをモックのRepositoryに設定
         _mockRepository
-            .Setup(r => r.SelectByNameLikeAsync(keyword))
+            .Setup(r => r.SelectByNameLikeWithDepartmentAsync(keyword))
             .ReturnsAsync(new List<Employee>()); 
         // キーワード検索する
         await _interactor.ExecuteAsync(keyword);

@@ -27,7 +27,7 @@ public class SearchEmployeesByKeywordInteractor : ISearchEmployeesByKeywordUseCa
     public async Task<List<Employee>> ExecuteAsync(string keyword)
     {
         // キーワード検索する
-        var result = await _repository.SelectByNameLikeAsync(keyword);
+        var result = await _repository.SelectByNameLikeWithDepartmentAsync(keyword);
         if (result == null || result.Count == 0)
         {
             throw new NotFoundException(

@@ -14,7 +14,7 @@ public class EmployeeEntityAdapterTests
     {
         var domain = new Employee(Guid.NewGuid().ToString(), "山田太郎");
         domain.ChangeDepartment(new Department(Guid.NewGuid().ToString(), "営業部"));
-        var adapter = new EmployeeEntityAdapter();
+        var adapter = new EmployeeEntityAdapter(new DepartmentEntityAdapter());
 
         var entity = await adapter.ConvertAsync(domain);
 
@@ -41,7 +41,7 @@ public class EmployeeEntityAdapterTests
             Name = "鈴木花子",
             Department = departmentEntity
         };
-        var adapter = new EmployeeEntityAdapter();
+        var adapter = new EmployeeEntityAdapter(new DepartmentEntityAdapter());
 
         var domain = await adapter.RestoreAsync(employeeEntity);
 
@@ -62,7 +62,7 @@ public class EmployeeEntityAdapterTests
             Name = "田中一郎",
             Department = null
         };
-        var adapter = new EmployeeEntityAdapter();
+        var adapter = new EmployeeEntityAdapter(new DepartmentEntityAdapter());
 
         var domain = await adapter.RestoreAsync(employeeEntity);
 
@@ -75,7 +75,7 @@ public class EmployeeEntityAdapterTests
     [ExpectedException(typeof(InternalException))]
     public async Task ConvertAsync_ThrowsInternalException_WhenNull()
     {
-        var adapter = new EmployeeEntityAdapter();
+        var adapter = new EmployeeEntityAdapter(new DepartmentEntityAdapter());
         await adapter.ConvertAsync(null!);
     }
 
@@ -83,7 +83,7 @@ public class EmployeeEntityAdapterTests
     [ExpectedException(typeof(InternalException))]
     public async Task RestoreAsync_ThrowsInternalException_WhenNull()
     {
-        var adapter = new EmployeeEntityAdapter();
+        var adapter = new EmployeeEntityAdapter(new DepartmentEntityAdapter());
         await adapter.RestoreAsync(null!);
     }
 

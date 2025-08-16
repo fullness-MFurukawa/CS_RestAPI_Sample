@@ -60,7 +60,8 @@ public class EmployeeRepositoryTests
         // トランザクションの開始
         _transaction = _sharedContext.Database.BeginTransaction();
         // ターゲット:EmployeeRepositryの生成 
-        _repository = new EmployeeRepository(_sharedContext, new EmployeeEntityAdapter());
+        _repository = new EmployeeRepository(_sharedContext,
+            new EmployeeEntityAdapter(new DepartmentEntityAdapter()));
     }
     /// <summary>
     /// テストメソッド実行後の後処理

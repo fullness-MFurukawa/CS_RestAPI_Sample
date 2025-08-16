@@ -11,29 +11,35 @@ namespace RestAPI_Sample.Infrastructure.Adapters;
 public class EmployeeEntityAdapter :
 IConverter<Employee, EmployeeEntity>, IRestorer<Employee, EmployeeEntity>
 {
+    private readonly DepartmentEntityAdapter _adapter;
+    /// <summary>
+    /// コンストラクタ
+    /// </summary>
+    /// <param name="adapter">DepartmentとDepartmentEntityの相互変換</param>
+    public EmployeeEntityAdapter(DepartmentEntityAdapter adapter)
+    {
+        _adapter = adapter;
+    }
+
     /// <summary>
     /// ドメインオブジェクト:EmployeeをEmployeeEntityに変換する
     /// </summary>
     /// <param name="domain">ドメインオブジェクト:Employee</param>
     /// <returns>EFCore:EmployeeEntity</returns>
-    public Task<EmployeeEntity> ConvertAsync(Employee domain)
+    public async Task<EmployeeEntity> ConvertAsync(Employee domain)
     {
-        if (domain == null)
-        {
-            throw new InternalException("引数domainがnullです。");
-        }
+        // 引数domainがnullの場合
+        _ = domain ?? throw new InternalException("引数domainがnullです。");
+        // EmployeeEntityを生成する
         var entity = new EmployeeEntity();
         entity.Uuid = domain.Id;
         entity.Name = domain.Name;
-        if (domain.Department != null)
-        {
-            Console.WriteLine("Department Not Null!");
-            var departmentEntity = new DepartmentEntity();
-            departmentEntity.Uuid = domain.Department.Id;
-            departmentEntity.Name = domain.Department.Name;
-            entity.Department = departmentEntity;
-        }
-        return Task.FromResult(entity);
+        // Departmentがnullならそのまま返す
+        if (domain.Department == null)
+            return entity;
+        // DepartmentがnullでなければDepartmentEntityに変換する
+        entity.Department = await _adapter.ConvertAsync(domain.Department);
+        return entity;
     }
     
     /// <summary>
@@ -41,20 +47,16 @@ IConverter<Employee, EmployeeEntity>, IRestorer<Employee, EmployeeEntity>
     /// </summary>
     /// <param name="target">>EFCore:EmployeeEntity</param>
     /// <returns>ドメインオブジェクト:Employee</returns>
-    public Task<Employee> RestoreAsync(EmployeeEntity target)
+    public async Task<Employee> RestoreAsync(EmployeeEntity target)
     {
-        if (target == null)
-        {
-            throw new InternalException("引数targetがnullです。");
-        }
+        // 引数targetがnullの場合
+        _ = target ?? throw new InternalException("引数targetがnullです。");
+        // ドメインオブジェクト:Employeeを復元する
         var domain = new Employee(target.Uuid, target.Name);
-        if (target.Department != null)
-        {
-            domain.ChangeDepartment(new Department(
-                target.Department.Uuid,
-                target.Department.Name
-            ));
-        }
-        return Task.FromResult(domain);
+        if (target.Department == null)
+            return domain;
+        // DepartmentEntityがnullでなければDepartmentを復元する
+        domain.ChangeDepartment(await _adapter.RestoreAsync(target.Department));
+        return domain;
     }
 }
