@@ -4,7 +4,6 @@ using RestAPI_Sample.Application.Domains.Repositories;
 using RestAPI_Sample.Application.Exceptions;
 using RestAPI_Sample.Infrastructure.Adapters;
 using RestAPI_Sample.Infrastructure.Contexts;
-
 namespace RestAPI_Sample.Infrastructure.Repositories;
 /// <summary>
 /// ドメインオブジェクト:Department(部署)のCRUD操作インターフェイスの実装
@@ -32,9 +31,12 @@ public class DepartmentRepository : IDepartmentRepository
     {
         try
         {
+            // すべての部署を取得する
             var results = await _context.Departments
-            .AsNoTracking().ToListAsync();
+                .AsNoTracking().ToListAsync();
+            // ドメインオブジェクト:Departmentを格納するリストを生成する
             var departments = new List<Department>();
+            // DepartmentEntityからDepartmentを復元してリストに格納する
             foreach (var result in results)
             {
                 var department = await _adapter.RestoreAsync(result);
@@ -42,11 +44,14 @@ public class DepartmentRepository : IDepartmentRepository
             }
             return departments;
         }
+        catch (DomainException)
+        {
+            throw; // DomainException例外はそのまま再スローする
+        }
         catch (Exception ex)
         {
             // 例外が発生した場合はInternalExceptionをスローする
-            throw new InternalException(
-                $"すべての部署取得に失敗しました。", ex);
+            throw new InternalException($"すべての部署取得に失敗しました。", ex);
         }
     }
     
@@ -59,14 +64,20 @@ public class DepartmentRepository : IDepartmentRepository
     {
         try
         {
+            // 引数の部署Idに一致する部署を取得する
             var result = await _context.Departments
-            .Where(department => department.Uuid == id)
-            .SingleOrDefaultAsync();
-            if (result == null)
+                .Where(department => department.Uuid == id)
+                .SingleOrDefaultAsync();
+            if (result is null)
             {
-                return null;
+                return null; // 存在しない場合はnullを返す
             }
+            // DepartmentEntityからDepartmentを復元する
             return await _adapter.RestoreAsync(result);
+        }
+        catch (DomainException)
+        {
+            throw; // DomainException例外はそのまま再スローする
         }
         catch (Exception ex)
         {

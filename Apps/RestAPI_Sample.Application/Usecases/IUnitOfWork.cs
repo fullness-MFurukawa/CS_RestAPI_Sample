@@ -1,5 +1,4 @@
 namespace RestAPI_Sample.Application.Usecases;
-
 /// <summary>
 /// Unit of Workパターンを利用したトランザクション制御インターフェイス
 /// </summary>

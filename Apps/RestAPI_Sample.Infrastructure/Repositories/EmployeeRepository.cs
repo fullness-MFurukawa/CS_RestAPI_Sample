@@ -4,9 +4,7 @@ using RestAPI_Sample.Application.Domains.Repositories;
 using RestAPI_Sample.Application.Exceptions;
 using RestAPI_Sample.Infrastructure.Adapters;
 using RestAPI_Sample.Infrastructure.Contexts;
-
 namespace RestAPI_Sample.Infrastructure.Repositories;
-
 /// <summary>
 /// ドメインオブジェクト:Employee(従業員)のCRUD操作インターフェイスの実装
 /// </summary>
@@ -50,8 +48,7 @@ public class EmployeeRepository : IEmployeeRepository
         catch (Exception ex)
         {
             // 例外が発生した場合はInternalExceptionをスローする
-            throw new InternalException(
-                "従業員の追加に失敗しました。", ex);
+            throw new InternalException("従業員の追加に失敗しました。", ex);
         }
     }
 
@@ -65,7 +62,7 @@ public class EmployeeRepository : IEmployeeRepository
         {
             // 削除対象を非同期で取得する
             var entity = await _context.Employees
-                .Where(e => e.Uuid == id).FirstOrDefaultAsync();
+                .Where(e => e.Uuid == id).SingleOrDefaultAsync();
             // 見つからない場合はfalseを返す
             if (entity == null)
             {
@@ -80,8 +77,7 @@ public class EmployeeRepository : IEmployeeRepository
         catch (Exception ex)
         {
             // 例外が発生した場合はInternalExceptionをスローする
-            throw new InternalException(
-                "従業員の削除に失敗しました。", ex);
+            throw new InternalException("従業員の削除に失敗しました。", ex);
         }
     }
 
@@ -98,8 +94,7 @@ public class EmployeeRepository : IEmployeeRepository
             var entity = await _context.Employees
                 .Where(e => e.Uuid == id)
                 .Include(e => e.Department)
-                .AsNoTracking()
-                .FirstOrDefaultAsync();
+                .AsNoTracking().SingleOrDefaultAsync();
             // 存在しない場合はnullを返す
             if (entity == null)
             {
@@ -108,11 +103,14 @@ public class EmployeeRepository : IEmployeeRepository
             // Ef CoreのEntityをドメインオブジェクトに変換して返す
             return await _adapter.RestoreAsync(entity);
         }
+        catch (DomainException)
+        {
+            throw; // DomainException例外はそのまま再スローする
+        }
         catch (Exception ex)
         {
             // 例外が発生した場合はInternalExceptionをスローする
-            throw new InternalException(
-                $"従業員の取得に失敗しました。 id={id}", ex);
+            throw new InternalException($"従業員の取得に失敗しました。 id={id}", ex);
         }
     }
 
@@ -139,11 +137,14 @@ public class EmployeeRepository : IEmployeeRepository
             }
             return employees;
         }
+        catch (DomainException)
+        {
+            throw; // DomainException例外はそのまま再スローする
+        }
         catch (Exception ex)
         {
             // 例外が発生した場合はInternalExceptionをスローする
-            throw new InternalException(
-                $"従業員の取得に失敗しました。 keyword={keyword}", ex);
+            throw new InternalException($"従業員の取得に失敗しました。 keyword={keyword}", ex);
         }
     }
 
@@ -158,7 +159,7 @@ public class EmployeeRepository : IEmployeeRepository
             // 従業員Idで従業員を取得する
             var entity = await _context.Employees
                 .Where(e => e.Uuid == employee.Id)
-                .FirstOrDefaultAsync();
+                .SingleOrDefaultAsync();
             // 存在しない場合はfalseを返す
             if (entity == null)
             {
@@ -185,8 +186,7 @@ public class EmployeeRepository : IEmployeeRepository
         catch (Exception ex)
         {
             // 例外が発生した場合はInternalExceptionをスローする
-            throw new InternalException(
-                $"従業員の変更に失敗しました。 id={employee.Id}", ex);
+            throw new InternalException($"従業員の変更に失敗しました。 id={employee.Id}", ex);
         }
     }
 }

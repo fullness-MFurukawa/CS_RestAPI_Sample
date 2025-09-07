@@ -22,7 +22,12 @@ public class EmployeeFactory
         _departmentEntityAdapter = departmentEntityAdapter;
         _employeeEntityAdapter = employeeEntityAdapter;
     }
-
+    
+    /// <summary>
+    /// 部署、従業員の参照関係を構築したEntityを生成して返す
+    /// </summary>
+    /// <param name="domain">ルートドメインオブジェクト:Employee</param>
+    /// <returns>参照関係を構築したEmployeeEntity</returns>
     public async Task<EmployeeEntity> ConvertAsync(Employee domain)
     {
         // EmployeeEntityの生成する
@@ -36,6 +41,11 @@ public class EmployeeFactory
         return entity;
     }
 
+    /// <summary>
+    /// 部署、従業員の参照関係を構築したEntityリストを生成して返す
+    /// </summary>
+    /// <param name="domain">ルートドメインオブジェクトのリスト:List<Employee></param>
+    /// <returns>参照関係を構築したEmployeeEntityのリスト</returns>
     public async Task<List<EmployeeEntity>> ConvertAsync(List<Employee> domains)
     {
         var entities = new List<EmployeeEntity>();
@@ -47,6 +57,11 @@ public class EmployeeFactory
         return entities;
     }
 
+    /// <summary>
+    /// EmployeeEntityの参照関係からドメインオブジェクト:Employeeを復元する
+    /// </summary>
+    /// <param name="target">EmployeeEntity</param>
+    /// <returns>復元したEmployee</returns>
     public async Task<Employee> RestoreAsync(EmployeeEntity target)
     {
         // ドメインオブジェクト:Employeeを復元する
@@ -58,6 +73,11 @@ public class EmployeeFactory
         return domain;
     }
 
+    /// <summary>
+    /// 部署、従業員の参照関係を構築したEntityリストからドメインオブジェクトのリストを復元する
+    /// </summary>
+    /// <param name="targets">List<EmployeeEntity></param>
+    /// <returns>Employee<List></returns>
     public async Task<List<Employee>> RestoreAsync(List<EmployeeEntity> targets)
     {
         var domains = new List<Employee>();
